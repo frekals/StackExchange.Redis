@@ -253,7 +253,6 @@ public partial class ConnectionMultiplexer
             catch (RedisTimeoutException)
             {
                 // syncTimeout, could be transient
-                throw;
             }
 
             Thread.Sleep(100);
