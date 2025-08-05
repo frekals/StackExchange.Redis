@@ -438,6 +438,8 @@ namespace StackExchange.Redis
             return true;
         }
 
+        private Random _rand = new();
+
         public void Complete()
         {
             // Ensure we can never call Complete on the same resultBox from two threads by grabbing it now
@@ -446,6 +448,10 @@ namespace StackExchange.Redis
             // set the completion/performance data
             performance?.SetCompleted();
 
+            if (_rand.Next(0, 2) == 0 && Command == RedisCommand.ROLE)
+            {
+                Thread.Sleep(15);
+            }
             currBox?.ActivateContinuations();
         }
 
