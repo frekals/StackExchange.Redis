@@ -242,10 +242,17 @@ public partial class ConnectionMultiplexer
 
             // verify role is primary according to:
             // https://redis.io/topics/sentinel-clients
-            if (connection.GetServer(newPrimaryEndPoint)?.Role()?.Value == RedisLiterals.master)
+            try
             {
-                success = true;
-                break;
+                if (connection.GetServer(newPrimaryEndPoint)?.Role()?.Value == RedisLiterals.master)
+                {
+                    success = true;
+                    break;
+                }
+            }
+            catch (RedisTimeoutException)
+            {
+                // syncTimeout, could be transient
             }
 
             Thread.Sleep(100);
